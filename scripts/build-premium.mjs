@@ -5,7 +5,7 @@ if(!app.includes(marker))throw Error('Missing startup marker');
 if(!app.includes("const SUPABASE_URL='https://spkoqjfpiurtjbfrtcvh.supabase.co';"))throw Error('Premium project identity mismatch');
 if(!/const SUPABASE_KEY='sb_publishable_[A-Za-z0-9_-]+';/.test(app))throw Error('Premium requires a publishable key');
 fs.mkdirSync('dist',{recursive:true});
-const bundle=app.replace(marker,'\n'+premium+marker);
+const bundle=app.replace(marker,()=> '\n'+premium+marker);
 fs.writeFileSync('dist/flowbiz-premium.js',bundle);
 for(const name of ['index.html','styles.css','master-admin-enhancements.js','master-admin-enhancements.css','support-selfservice-enhancements.js'])fs.copyFileSync(name,'dist/'+name);
 if(/ifanefgaiuzkbjtttiqn/.test(bundle+fs.readFileSync('dist/index.html','utf8')))throw Error('Standard endpoint in runtime');

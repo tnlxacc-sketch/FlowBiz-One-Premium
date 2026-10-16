@@ -15,3 +15,4 @@ jobs:
       - run: node tests/full-system-uat-v1177.mjs
       - run: node scripts/build-premium.mjs
       - run: node --check dist/flowbiz-premium.js
+      - run: node tests/premium-built-runtime.test.mjs

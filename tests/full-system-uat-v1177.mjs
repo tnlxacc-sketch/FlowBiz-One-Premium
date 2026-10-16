@@ -10,7 +10,7 @@ const support=read('../support-selfservice-enhancements.js');
 const uat=read('../docs/UAT_CHECKLIST.md');
 
 // Release identity / cache control
-assert(index.includes('flowbiz-premium.js?v=20261016-1'),'Production must load app.js v1.17.7');
+assert(index.includes('flowbiz-premium.js?v=20261016-2'),'Production must load app.js v1.17.7');
 assert(index.includes('support-selfservice-enhancements.js?v=1.17.7'),'Production must load self-service v1.17.7');
 
 // Security / account control

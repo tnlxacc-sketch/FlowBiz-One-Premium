@@ -1,0 +1,16 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const bundle=fs.readFileSync('dist/flowbiz-premium.js','utf8');
+const premium=fs.readFileSync('premium.js','utf8');
+assert(bundle.includes(premium),'Built runtime must preserve Premium source byte-for-byte, including $$ selectors');
+const controls=new Map();const node=s=>{if(!controls.has(s))controls.set(s,{dataset:{pbDay:'2026-10-17'},value:'2026-10-16'});return controls.get(s)};
+const ctx={console,Intl,URL,crypto,Blob,setTimeout,MutationObserver:class{observe(){}},document:{body:{},querySelector:node,querySelectorAll:s=>s.startsWith('[data-pb')?[node(s)]:[]},window:{},supabase:{createClient(){return{}}}};
+vm.createContext(ctx);
+vm.runInContext(bundle.replace(/\ninit\(\)\.catch[\s\S]*$/,'')+'\nglobalThis.testRuntime={premiumWire,state};',ctx);
+ctx.testRuntime.premiumWire();
+assert.equal(typeof node('[data-pb-day]').onclick,'function');
+assert.equal(typeof node('[data-pb-free-day]').onclick,'function');
+assert.equal(typeof node('[data-pb]').onclick,'function');
+for(const s of ['#pbNew','#pbAvailability','#pbPrev','#pbNext','#pbToday','#pbRefresh'])assert.equal(typeof node(s).onclick,'function');
+console.log('Built Premium runtime: exact source preserved; calendar, availability and booking actions wired PASS');

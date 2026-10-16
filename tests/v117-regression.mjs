@@ -21,9 +21,9 @@ const migrationPaths=[
 ];
 for(const p of migrationPaths) assert(fs.existsSync(new URL(p,import.meta.url)),`missing production migration: ${p}`);
 
-assert(index.includes('flowbiz-premium.js?v=20261016-1'),'frontend cache version must be v1.17.7');
+assert(index.includes('flowbiz-premium.js?v=20261016-2'),'frontend cache version must be v1.17.7');
 assert(index.includes('support-selfservice-enhancements.js?v=1.17.7'),'self-service layer cache version must be v1.17.7');
-assert(index.includes('styles.css?v=20261016-1'),'stylesheet cache version must be v1.17.0');
+assert(index.includes('styles.css?v=20261016-2'),'stylesheet cache version must be v1.17.0');
 
 assert(app.includes("['stockadjust','±','Stock Adjustment']"),'Stock Adjustment menu missing');
 assert(app.includes("['repack','↔','Repack / Conversion']"),'Repack menu missing');
