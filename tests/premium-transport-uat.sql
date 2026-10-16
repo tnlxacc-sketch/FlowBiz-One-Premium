@@ -19,6 +19,12 @@ begin
  r:=create_order(cust2,current_date,now()+interval '2 days',jsonb_build_array(jsonb_build_object('product_id',p,'warehouse_id',wh,'qty',20,'unit_price',50)),'PUAT-2');oid2:=(r->>'id')::uuid;
  r:=create_order(cust1,current_date,now()+interval '2 days',jsonb_build_array(jsonb_build_object('product_id',p,'warehouse_id',wh,'qty',5,'unit_price',50)),'PUAT-3');oid3:=(r->>'id')::uuid;
  update user_profiles set app_role='SALES' where user_id=auth.uid();
+ update orders set status='IN_DELIVERY' where id=oid3;
+ rejected:=false;begin perform premium_request_vehicle_booking(v,now()+interval '3 days',now()+interval '3 days 2 hours',array[oid3],'ineligible');exception when others then if sqlerrm='INVALID_OR_DUPLICATE_ORDER' then rejected:=true;else raise;end if;end;
+ if not rejected then raise exception 'INELIGIBLE_ORDER_BOOKING_ALLOWED';end if;
+ update orders set status='CONFIRMED' where id=oid3;
+ insert into premium_test_results values('Order already in delivery cannot be booked again','PASS');
+
  r:=premium_request_vehicle_booking(v,now()+interval '2 days',now()+interval '2 days 2 hours',array[oid1,oid2],'UAT');b:=(r->>'id')::uuid;
  insert into premium_test_results values('Sales: multi customer / Order request','PASS');
  rejected:=false;begin perform premium_decide_vehicle_booking(b,'CONFIRMED',null);exception when others then if sqlerrm='ROLE_NOT_ALLOWED' then rejected:=true;else raise;end if;end;

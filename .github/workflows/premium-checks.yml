@@ -1,0 +1,17 @@
+name: Premium checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node tests/premium-ui.test.mjs
+      - run: node tests/v117-regression.mjs
+      - run: node tests/full-system-uat-v1177.mjs
+      - run: node scripts/build-premium.mjs
+      - run: node --check dist/flowbiz-premium.js
