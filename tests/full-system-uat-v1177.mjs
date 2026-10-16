@@ -48,9 +48,9 @@ const migrationPaths=[
 ];
 for(const p of migrationPaths) assert(exists(p),`Missing migration: ${p}`);
 
-// Backup / recovery / year-end artifacts
+// Premium backup/year-end tooling presence only; Standard-specific restore rehearsal is excluded.
 for(const p of [
-  '../scripts/backup-project.mjs','../scripts/restore-rehearsal.mjs','../scripts/rollover-year.mjs',
+  '../scripts/backup-project.mjs','../scripts/build-premium.mjs','../scripts/rollover-year.mjs',
   '../docs/BACKUP_RESTORE_RUNBOOK.md','../docs/YEAR_END.md','../docs/COMMERCIAL_RUNBOOK.md'
 ]) assert(exists(p),`Missing recovery artifact: ${p}`);
 
@@ -78,7 +78,7 @@ console.log(JSON.stringify({
   result:'PASS',
   gates:[
     'release-identity','security-account-control','core-modules','stock-guards',
-    'migrations','backup-recovery','role-onboarding','context-help','actionable-errors','uat-coverage'
+    'migrations','backup-tooling-presence','role-onboarding','context-help','actionable-errors','uat-coverage'
   ],
   commercialRoles:6,
   criticalMigrations:migrationPaths.length
