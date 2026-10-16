@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f7f8fa">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; connect-src 'self' https://spkoqjfpiurtjbfrtcvh.supabase.co wss://spkoqjfpiurtjbfrtcvh.supabase.co; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  <title>FlowBiz One Premium</title>
+  <link rel="stylesheet" href="styles.css?v=20261015-2">
+  <link rel="stylesheet" href="master-admin-enhancements.css?v=1.14.6">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js"></script>
+  <script defer src="flowbiz-premium.js?v=20261015-2"></script>
+  <script defer src="master-admin-enhancements.js?v=1.14.6"></script>
+  <script defer src="support-selfservice-enhancements.js?v=1.17.7"></script>
+</head>
+<body>
+  <div id="loading" class="loading"><div class="spinner"></div><span>กำลังโหลด FlowBiz One Premium…</span></div>
+  <main id="authView" class="auth-shell premium-auth hidden">
+    <section class="auth-hero">
+      <div class="auth-brand"><span class="auth-logo">FB</span><strong>FlowBiz <em>One Premium</em></strong></div>
+      <p class="auth-kicker">SALES • INVENTORY • DELIVERY • PROFIT</p>
+      <h1>เห็นธุรกิจตั้งแต่<br><span>“รับออเดอร์”</span> ถึง <em>“กำไรจริง”</em></h1>
+      <p class="auth-lead">เชื่อมฝ่ายขาย คลังสินค้า และขนส่งให้ใช้ข้อมูลชุดเดียว พร้อมเห็นต้นทุนและกำไรต่อ Invoice อย่างเป็นระบบ</p>
+      <div class="auth-flow" aria-hidden="true">
+        <div><b>01</b><span>Sales Order</span><small>รับคำสั่งซื้อ</small></div>
+        <i>→</i>
+        <div><b>02</b><span>Warehouse</span><small>จัดเตรียม Stock</small></div>
+        <i>→</i>
+        <div><b>03</b><span>Delivery</span><small>จัดส่งสินค้า</small></div>
+        <i>→</i>
+        <div><b>04</b><span>Actual</span><small>ยอดรับจริง</small></div>
+        <i>→</i>
+        <div><b>05</b><span>Profit</span><small>Cost • Freight • GP</small></div>
+      </div>
+      <div class="auth-promise"><b>One Connected Business Flow</b><span>ข้อมูลเดียวกันตั้งแต่งานขายจนถึงผลกำไร</span></div>
+    </section>
+    <section class="auth-panel">
+      <div class="login-card premium-login">
+        <div class="auth-brand login-brand"><span class="auth-logo">FB</span><strong>FlowBiz <em>One Premium</em></strong></div>
+        <p class="subtitle">Sales • Inventory • Delivery • Profit</p>
+        <h2>เข้าสู่ระบบ</h2>
+        <p class="login-intro">เข้าสู่พื้นที่ทำงานของบริษัท</p>
+        <form id="loginForm" autocomplete="on">
+          <label>อีเมล<input id="email" type="email" autocomplete="username" required placeholder="name@company.com"></label>
+          <label>รหัสผ่าน<input id="password" type="password" autocomplete="current-password" minlength="8" required placeholder="กรอกรหัสผ่าน"></label>
+          <button class="btn primary wide" type="submit">เข้าสู่ระบบ</button>
+          <button id="forgotBtn" class="text-btn auth-link" type="button">ลืมรหัสผ่าน / ขอรหัสใหม่จาก Admin</button>
+          <p id="loginError" class="error" role="alert"></p>
+        </form>
+        <div class="alert info login-admin-only">บัญชีผู้ใช้งานสร้างโดยผู้ดูแลระบบของบริษัท<br>หากยังไม่มีบัญชี กรุณาติดต่อ Admin บริษัท</div>
+        <p class="login-note">Secure access • Role-based permission</p>
+      </div>
+    </section>
+  </main>
+  <div id="shell" class="shell hidden">
+    <header class="topbar">
+      <button id="menuBtn" class="icon-btn" aria-label="เปิดเมนู">☰</button>
+      <div class="brand"><b>FlowBiz One Premium</b><small>Sales • Inventory • Delivery • Profit</small></div>
+      <div class="top-company"><b id="companyName">FlowBiz One Premium</b><small id="sideUser"></small></div>
+      <span id="roleName" class="role-chip"></span>
+      <button id="refreshBtn" class="btn ghost small-btn">↻ รีเฟรช</button>
+    </header>
+    <div class="app-body">
+      <aside id="sidebar" class="sidebar">
+        <nav id="nav"></nav>
+        <div class="side-foot"><button id="logoutBtn" class="text-btn">ออกจากระบบ</button></div>
+      </aside>
+      <section class="workspace"><main id="page" class="page"></main></section>
+    </div>
+  </div>
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card"><button id="modalClose" class="modal-close" aria-label="ปิด">×</button><div id="modalBody"></div></div>
+  </div>
+  <div id="toast" class="toast" aria-live="polite"></div>
+</body>
+</html>

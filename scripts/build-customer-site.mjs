@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+import fs from 'node:fs';
+import path from 'node:path';
+const [,,...argv]=process.argv;
+const opts=Object.fromEntries(argv.map(a=>{const i=a.indexOf('=');if(!a.startsWith('--')||i<0)throw Error('Use --key=value');return [a.slice(2,i),a.slice(i+1)];}));
+const required=['supabaseUrl','publishableKey','siteUrl','output'];
+for(const k of required)if(!opts[k])throw Error('Missing '+k);
+const sb=new URL(opts.supabaseUrl),site=new URL(opts.siteUrl);
+if(sb.protocol!=='https:'||!/^[-a-z0-9]+\.supabase\.co$/.test(sb.hostname)||sb.pathname!=='/'||sb.search||sb.hash)throw Error('Invalid Supabase project URL');
+if(site.protocol!=='https:'||!site.pathname.endsWith('/')||site.search||site.hash)throw Error('Invalid site URL');
+if(!/^sb_publishable_[A-Za-z0-9_-]+$/.test(opts.publishableKey)&&!/^eyJ[A-Za-z0-9._-]+$/.test(opts.publishableKey))throw Error('Only public publishable/anon keys accepted');
+if(/secret|service_role/i.test(opts.publishableKey))throw Error('Refusing secret key');
+const root=path.resolve('.'),out=path.resolve(opts.output);
+if(out===root||out.startsWith(root+path.sep)||root.startsWith(out+path.sep)||fs.existsSync(out))throw Error('Output must be a new directory outside the source repo');
+const read=n=>fs.readFileSync(path.join(root,n),'utf8');
+let app=read('app.js'),html=read('index.html');
+const url=app.match(/const SUPABASE_URL='([^']+)';/),key=app.match(/const SUPABASE_KEY='([^']+)';/),siteOld=app.match(/const FLOWSTOCK_APP_URL='([^']+)';/);
+if(!url||!key||!siteOld)throw Error('Config markers not found');
+function once(s,a,b){if(s.split(a).length!==2)throw Error('Expected one occurrence: '+a.slice(0,30));return s.replace(a,b)}
+app=once(app,url[0],"const SUPABASE_URL='"+sb.origin+"';");
+app=once(app,key[0],"const SUPABASE_KEY='"+opts.publishableKey+"';");
+app=once(app,siteOld[0],"const FLOWSTOCK_APP_URL='"+site.href+"';");
+html=once(html,url[1],sb.origin);
+html=once(html,url[1].replace('https://','wss://'),sb.origin.replace('https://','wss://'));
+const assets=['index.html','app.js','premium.js','styles.css','master-admin-enhancements.js','master-admin-enhancements.css','support-selfservice-enhancements.js'];
+for(const n of assets)if(!fs.existsSync(path.join(root,n)))throw Error('Missing asset '+n);
+fs.mkdirSync(out,{recursive:true});
+for(const n of assets)fs.copyFileSync(path.join(root,n),path.join(out,n));
+fs.writeFileSync(path.join(out,'index.html'),html);
+fs.writeFileSync(path.join(out,'app.js'),app);
+const premium=read('premium.js'),marker='\nstartSearchableSelectObserver();\ninit().catch';
+fs.writeFileSync(path.join(out,'flowbiz-premium.js'),app.includes(marker)?app.replace(marker,'\n'+premium+marker):app+'\n'+premium);
+fs.writeFileSync(path.join(out,'.nojekyll'),'');
+console.log(JSON.stringify({ok:true,output:out,site:site.href,supabase:sb.origin,assets:assets.length}));

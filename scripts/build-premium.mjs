@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+const app=fs.readFileSync('app.js','utf8'),premium=fs.readFileSync('premium.js','utf8');
+const marker='\nstartSearchableSelectObserver();\ninit().catch';
+if(!app.includes(marker))throw Error('Missing startup marker');
+fs.mkdirSync('dist',{recursive:true});
+const bundle=app.replace(marker,'\n'+premium+marker);
+fs.writeFileSync('dist/flowbiz-premium.js',bundle);
+for(const name of ['index.html','styles.css','master-admin-enhancements.js','master-admin-enhancements.css','support-selfservice-enhancements.js'])fs.copyFileSync(name,'dist/'+name);
+if(/ifanefgaiuzkbjtttiqn/.test(bundle+fs.readFileSync('dist/index.html','utf8')))throw Error('Standard endpoint in runtime');
+console.log('Premium bundle built; Standard endpoints absent');

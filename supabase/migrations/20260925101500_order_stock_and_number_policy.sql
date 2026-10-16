@@ -1,0 +1,13 @@
+-- Order Stock Policy + Order Number Policy
+-- Applied to Supabase project ifanefgaiuzkbjtttiqn on 2026-09-25.
+-- Business rules:
+--   order_stock_policy: WARN | BLOCK
+--   order_number_policy: SYSTEM | MANUAL | FLEXIBLE
+-- Warehouse issue remains strict and may never make stock negative.
+--
+-- See live database migration history for full function bodies:
+-- private.order_stock_policy(uuid)
+-- private.order_number_policy(uuid)
+-- public.admin_set_order_policies(text,text)
+-- public.create_order(uuid,date,timestamptz,jsonb,text,text)
+-- compatibility overload public.create_order(uuid,date,timestamptz,jsonb,text)
