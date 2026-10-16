@@ -7,8 +7,9 @@ assert(bundle.includes(premium),'Built runtime must preserve Premium source byte
 const controls=new Map();const node=s=>{if(!controls.has(s))controls.set(s,{dataset:{pbDay:'2026-10-17'},value:'2026-10-16'});return controls.get(s)};
 const ctx={console,Intl,URL,crypto,Blob,setTimeout,MutationObserver:class{observe(){}},document:{body:{},querySelector:node,querySelectorAll:s=>s.startsWith('[data-pb')?[node(s)]:[]},window:{},supabase:{createClient(){return{}}}};
 vm.createContext(ctx);
-vm.runInContext(bundle.replace(/\ninit\(\)\.catch[\s\S]*$/,'')+'\nglobalThis.testRuntime={premiumWire,state};',ctx);
-ctx.testRuntime.premiumWire();
+vm.runInContext(bundle.replace(/\ninit\(\)\.catch[\s\S]*$/,'')+'\nglobalThis.testRuntime={wirePage,state};',ctx);
+ctx.testRuntime.state.page='bookings';
+ctx.testRuntime.wirePage();
 assert.equal(typeof node('[data-pb-day]').onclick,'function');
 assert.equal(typeof node('[data-pb-free-day]').onclick,'function');
 assert.equal(typeof node('[data-pb]').onclick,'function');

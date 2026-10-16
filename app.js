@@ -427,6 +427,7 @@ function render(){
   $('#page').innerHTML=(pages[state.page]||dashboardPage)();wireSort();wirePage();
 }
 function wirePage(){
+  if(state.page==='bookings'){premiumWire();return;}
   $$('[data-action]').forEach(b=>b.onclick=()=>{const action=actions[b.dataset.action];if(!action)return toast(`ปุ่ม ${b.dataset.action} ยังไม่พร้อมใช้งาน`,true);action(b.dataset.id)});
   $$('[data-go]').forEach(b=>b.onclick=()=>go(b.dataset.go));
   $$('[data-profit-view]').forEach(b=>b.onclick=()=>{state.profitView=b.dataset.profitView;render()});
