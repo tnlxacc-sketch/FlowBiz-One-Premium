@@ -31,3 +31,9 @@ assert.equal(ui.pbFree('v','2026-10-17T02:00:00Z','2026-10-17T04:00:00Z'),false)
 assert.equal(ui.pbFree('v','2026-10-17T03:00:00Z','2026-10-17T04:00:00Z'),true);
 ui.state.bookingView='day';ui.state.data.bookings[0].status='REVISION_REQUESTED';ui.state.data.bookings[0].requested_by='test-user';ui.state.session={user:{id:'test-user'}};ui.state.profile={app_role:'SALES'};assert(ui.premiumBookingPage().includes('แก้ไขและส่งใหม่'));
 console.log('Calendar day/week/month, free-slot overlap/adjacency, year boundary, revision button PASS.');
+
+ui.state.data.bookings=[];ui.state.data.bookingOrders=[];ui.state.data.trips=[{id:'legacy',vehicle_id:'v',planned_start:'2026-10-16T16:00:00Z',planned_end:'2026-10-17T02:00:00Z',status:'PLANNED'}];ui.state.bookingView='month';ui.state.profile={app_role:'ADMIN'};
+const occupiedMonth=ui.premiumBookingPage();
+assert(occupiedMonth.includes('data-pb-day="2026-10-16">16<small>1 รายการ</small>'));
+assert(occupiedMonth.includes('data-pb-day="2026-10-17">17<small>1 รายการ</small>'));
+console.log('Month counts legacy trips and bookings overlapping midnight PASS');
